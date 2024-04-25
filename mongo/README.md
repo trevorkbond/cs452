@@ -1,6 +1,7 @@
 # Mongo Learning Plan
 
-## Mongo Project 1
+## Mongo Project 1 
+(Intended for in-class step by step explanations)
 - Step 1  (CRUD)
 
   - Using a sandbox environment create, read, update, delete documents. Query documents that other students are creating at the same time.
