@@ -12,7 +12,7 @@
 
 <a href="sample_post.md">**sample_post.md**</a> is a sample report of the data in this effort.
 
-<a href="schema.png">schema.png</a> reveals a poorly setup schema where foreign keys exist but are not explicitly defined :smile:. This was created from the sqlite database via <a href="https://www.google.com/search?q=install+schemacrawler">schemacrawler</a>:
+<a href="schema.png">schema.png</a> is a sample schema. Can you identify where foreign keys should exist but are not explicitly defined :smile:? This was created from the sqlite database via <a href="https://www.google.com/search?q=install+schemacrawler">schemacrawler</a>:
 ```
 schemacrawler --server sqlite --database .\aidb.sqlite --command=schema --output-file=./schema.png --info-level=standard
 ```
