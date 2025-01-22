@@ -42,14 +42,11 @@ print(configPath)
 with open(configPath) as configFile:
     config = json.load(configFile)
 
-openAiClient = OpenAI(
-    api_key = config["openaiKey"],
-    organization = config["orgId"]
-)
+openAiClient = OpenAI(api_key = config["openaiKey"])
 
 def getChatGptResponse(content):
     stream = openAiClient.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-4o",
         messages=[{"role": "user", "content": content}],
         stream=True,
     )
