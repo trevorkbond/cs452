@@ -1,48 +1,56 @@
-create table person (
-    person_id integer primary key,
-    name varchar(20) not null
+create table ClothingSponsor (
+    clothingSponsorId int primary key,
+    sponsorName varchar(50) not null
 );
 
-create table phone (
-    phone_id integer primary key,
-    person_id integer not null,
-    area_code int not null,
-    number int not null,
-    can_recieve_sms tinyint not null,
-    foreign key (person_id) references person (person_id)
+create table RacketBrand (
+    racketBrandId int primary key,
+    brandName varchar(50) not null
 );
 
-create table address (
-    address_id integer primary key,
-    person_id integer not null,
-    street varchar(50),
-    zip integer not null
+create table Player (
+    playerId int primary key,
+    fullName varchar(50) not null,
+    association char(3) not null,
+    countryISO char(3) not null,
+    careerWinnings bigint not null default 0,
+    isActive boolean not null,
+    constraint association_chk check (association in ('WTA', 'ATP'))
 );
 
-create table zip (
-    zip integer primary key,
-    city varchar(35),
-    state_two_letter_code char(2)
+create table ClothingSponsorPlayer (
+    clothingSponsorId int not null,
+    playerId int not null,
+    primary key (clothingSponsorId, playerId),
+    foreign key (clothingSponsorId) references ClothingSponsor (clothingSponsorId),
+    foreign key (playerId) references Player (playerId)
 );
 
-create table dog (
-    dog_id integer primary key,
-    name varchar(35),
-    breed varchar(35),
-    birth_date date
+create table RacketBrandPlayer (
+    racketBrandId int not null,
+    playerId int not null,
+    primary key (racketBrandId, playerId),
+    foreign key (racketBrandId) references RacketBrand (racketBrandId),
+    foreign key (playerId) references Player (playerId)
 );
 
-create table award (
-    award_id integer primary key,
-    dog_id integer not null,
-    event_date date,
-    award_name varchar(25) not null,
-    foreign key (dog_id) references dog (dog_id)
+create table Tournament (
+    tournamentId integer primary key,
+    tournamentName varchar(50) not null,
+    isGrandSlam boolean not null default 0,
+    courtType varchar(10),
+    constraint court_chk check (courtType in ('GRASS', 'HARD', 'CLAY'))
 );
 
-create table person_dog (
-    dog_id integer,
-    person_id integer,
-    foreign key (dog_id) references dog (dog_id),
-    foreign key (person_id) references person (person_id)
+create table Match (
+    winningPlayerId int not null,
+    losingPlayerId int not null,
+    score varchar(50) not null,
+    tournamentId int not null,
+    round varchar(5) not null,
+    tournamentYear int not null,
+    foreign key (winningPlayerId) references Player (playerId),
+    foreign key (losingPlayerId) references Player (playerId),
+    foreign key (tournamentId) references Tournament (tournamentId),
+    constraint round_chk check (round in ('R1', 'R2', 'R3', 'R4', 'QF', 'SF', 'F'))
 );

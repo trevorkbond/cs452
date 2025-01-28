@@ -1,0 +1,62 @@
+{
+  "strategy": "zero_shot",
+  "prompt_prefix": "create table ClothingSponsor (\n    clothingSponsorId int primary key,\n    sponsorName varchar(50) not null\n);\n\ncreate table RacketBrand (\n    racketBrandId int primary key,\n    brandName varchar(50) not null\n);\n\ncreate table Player (\n    playerId int primary key,\n    fullName varchar(50) not null,\n    association char(3) not null,\n    countryISO char(3) not null,\n    careerWinnings bigint not null default 0,\n    isActive boolean not null,\n    constraint association_chk check (association in ('WTA', 'ATP'))\n);\n\ncreate table ClothingSponsorPlayer (\n    clothingSponsorId int not null,\n    playerId int not null,\n    primary key (clothingSponsorId, playerId),\n    foreign key (clothingSponsorId) references ClothingSponsor (clothingSponsorId),\n    foreign key (playerId) references Player (playerId)\n);\n\ncreate table RacketBrandPlayer (\n    racketBrandId int not null,\n    playerId int not null,\n    primary key (racketBrandId, playerId),\n    foreign key (racketBrandId) references RacketBrand (racketBrandId),\n    foreign key (playerId) references Player (playerId)\n);\n\ncreate table Tournament (\n    tournamentId integer primary key,\n    tournamentName varchar(50) not null,\n    isGrandSlam boolean not null default 0,\n    courtType varchar(10),\n    constraint court_chk check (courtType in ('GRASS', 'HARD', 'CLAY'))\n);\n\ncreate table Match (\n    winningPlayerId int not null,\n    losingPlayerId int not null,\n    score varchar(50) not null,\n    tournamentId int not null,\n    round varchar(5) not null,\n    tournamentYear int not null,\n    foreign key (winningPlayerId) references Player (playerId),\n    foreign key (losingPlayerId) references Player (playerId),\n    foreign key (tournamentId) references Tournament (tournamentId),\n    constraint round_chk check (round in ('R1', 'R2', 'R3', 'R4', 'QF', 'SF', 'F'))\n);\n\n\nGive me a sqlite select statement that answers the question. I have given you the SQL database table creation script above. Only respond with sqlite syntax. If there is an error do not explain it!",
+  "questionResults": [
+    {
+      "question": "Which player has won the most grand slams?",
+      "sql": "\nSELECT p.fullName, COUNT(m.tournamentId) AS grandSlamWins\nFROM Player p\nJOIN Match m ON p.playerId = m.winningPlayerId\nJOIN Tournament t ON m.tournamentId = t.tournamentId\nWHERE t.isGrandSlam = 1\nGROUP BY p.playerId\nORDER BY grandSlamWins DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[('Novak Djokovic', 6)]",
+      "friendlyResponse": "The player with the most grand slam titles is Novak Djokovic, with 6 wins.",
+      "error": "None"
+    },
+    {
+      "question": "Which clothing brand sponsors the most players?",
+      "sql": "\nSELECT cs.sponsorName, COUNT(csp.playerId) AS playerCount\nFROM ClothingSponsor cs\nJOIN ClothingSponsorPlayer csp ON cs.clothingSponsorId = csp.clothingSponsorId\nGROUP BY cs.sponsorName\nORDER BY playerCount DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[('Nike', 7)]",
+      "friendlyResponse": "The clothing brand that sponsors the most players is Nike, with 7 players.",
+      "error": "None"
+    },
+    {
+      "question": "What happened to Madison Keys at the 2025 Australian Open?",
+      "sql": "\nSELECT m.round, m.score\nFROM Match m\nJOIN Player p ON m.winningPlayerId = p.playerId OR m.losingPlayerId = p.playerId\nJOIN Tournament t ON m.tournamentId = t.tournamentId\nWHERE p.fullName = 'Madison Keys' AND t.tournamentName = 'Australian Open' AND m.tournamentYear = 2025;\n",
+      "queryRawResponse": "[('SF', '5-7 6-1 7-6(8)'), ('F', '6-3 2-6 7-5')]",
+      "friendlyResponse": "At the 2025 Australian Open, Madison Keys made it to the semifinals, where she lost with a score of 5-7, 6-1, 7-6(8). She then reached the final but was defeated with a score of 6-3, 2-6, 7-5.",
+      "error": "None"
+    },
+    {
+      "question": "Which court type is Nadal the best on?",
+      "sql": "\nSELECT courtType, COUNT(*) AS match_count\nFROM Match\nJOIN Player ON Match.winningPlayerId = Player.playerId\nWHERE Player.fullName = 'Rafael Nadal'\nGROUP BY courtType\nORDER BY match_count DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[('SF', '5-7 6-1 7-6(8)'), ('F', '6-3 2-6 7-5')]",
+      "friendlyResponse": "At the 2025 Australian Open, Madison Keys made it to the semifinals, where she lost with a score of 5-7, 6-1, 7-6(8). She then reached the final but was defeated with a score of 6-3, 2-6, 7-5.",
+      "error": "no such column: courtType"
+    },
+    {
+      "question": "What is the head to head record between Federer and Nadal?",
+      "sql": "\nSELECT \n    p1.fullName AS Player1, \n    p2.fullName AS Player2, \n    SUM(CASE WHEN m.winningPlayerId = p1.playerId THEN 1 ELSE 0 END) AS Player1Wins, \n    SUM(CASE WHEN m.losingPlayerId = p1.playerId THEN 1 ELSE 0 END) AS Player1Losses\nFROM \n    Match m\nJOIN \n    Player p1 ON m.winningPlayerId = p1.playerId OR m.losingPlayerId = p1.playerId\nJOIN \n    Player p2 ON (p1.playerId = m.winningPlayerId AND p2.playerId = m.losingPlayerId) \n              OR (p1.playerId = m.losingPlayerId AND p2.playerId = m.winningPlayerId)\nWHERE \n    p1.fullName = 'Federer' AND p2.fullName = 'Nadal'\nGROUP BY \n    p1.fullName, p2.fullName;\n",
+      "queryRawResponse": "[]",
+      "friendlyResponse": "It looks like there are no recorded matches between Federer and Nadal in the database.",
+      "error": "None"
+    },
+    {
+      "question": "Which tennis player has switched racket brands?",
+      "sql": "\nSELECT DISTINCT p.fullName \nFROM Player p\nJOIN RacketBrandPlayer rb1 ON p.playerId = rb1.playerId\nJOIN RacketBrandPlayer rb2 ON p.playerId = rb2.playerId AND rb1.racketBrandId <> rb2.racketBrandId;\n",
+      "queryRawResponse": "[('Madison Keys',)]",
+      "friendlyResponse": "Madison Keys has switched racket brands.",
+      "error": "None"
+    },
+    {
+      "question": "Which player has the best overall record?",
+      "sql": "\nSELECT playerId, fullName, COUNT(*) AS totalMatches, \n       SUM(CASE WHEN winningPlayerId = playerId THEN 1 ELSE 0 END) AS wins,\n       SUM(CASE WHEN winningPlayerId <> playerId THEN 1 ELSE 0 END) AS losses,\n       (SUM(CASE WHEN winningPlayerId = playerId THEN 1 ELSE 0 END) * 1.0 / COUNT(*)) AS winRate\nFROM Player\nLEFT JOIN Match ON playerId IN (winningPlayerId, losingPlayerId)\nGROUP BY playerId\nORDER BY winRate DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[(6, 'Iga Swiatek', 9, 7, 2, 0.7777777777777778)]",
+      "friendlyResponse": "The player with the best overall record is Iga Swiatek, with 9 wins, 7 losses, and a winning percentage of 77.78%.",
+      "error": "None"
+    },
+    {
+      "question": "How many players has Iga Swiatek bageled?",
+      "sql": "\nSELECT COUNT(DISTINCT losingPlayerId) AS bageled_players\nFROM Match\nWHERE winningPlayerId = (SELECT playerId FROM Player WHERE fullName = 'Iga Swiatek')\nAND score LIKE '%0%';\n",
+      "queryRawResponse": "[(2,)]",
+      "friendlyResponse": "Iga Swiatek has bageled 2 players.",
+      "error": "None"
+    }
+  ]
+}

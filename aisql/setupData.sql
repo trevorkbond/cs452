@@ -1,49 +1,114 @@
-INSERT INTO person (person_id, name) VALUES
-(1, 'Laura Stevenson'),
-(2, 'Bob Jones'),
-(3, 'Charlie Brown'),
-(4, 'Jimmy Hendricks'),
-(5, 'Sydney Smith'),
-(6, 'Jordan Malone');
+INSERT INTO ClothingSponsor (clothingSponsorId, sponsorName) VALUES
+(1, 'Lacoste'),
+(2, 'Asics'),
+(3, 'Nike'),
+(4, 'Uniqlo'),
+(5, 'Rolex'),
+(6, 'On'),
+(7, 'New Balance'),
+(8, 'American Eagle');
 
-INSERT INTO phone (phone_id, person_id, area_code, number, can_recieve_sms) VALUES
-(1, 1, 123, 4567890, 1),
-(2, 2, 234, 5678901, 0),
-(3, 3, 345, 6789012, 1),
-(4, 3, 345, 6789013, 0);
+INSERT INTO RacketBrand (racketBrandId, brandName) VALUES
+(1, 'Head'),
+(2, 'Wilson'),
+(3, 'Babolat'),
+(4, 'Tecnifibre'),
+(5, 'Yonex');
 
-INSERT INTO address (address_id, person_id, street, zip) VALUES
-(1, 1, '123 Maple Street', 10001),
-(2, 2, '456 Oak Road', 20002),
-(3, 3, '789 Pine Avenue', 30003),
-(4, 4, '119 3rd Street', 84604),
-(5, 5, '121 3rd Street', 84604),
-(6, 6, '123 3rd Street', 84604);
+INSERT INTO Player (playerId, fullName, association, countryISO, careerWinnings, isActive) VALUES
+(1, 'Novak Djokovic', 'ATP', 'SRB', 186217004, 1),
+(2, 'Roger Federer', 'ATP', 'CHE', 130594339, 0),
+(3, 'Rafael Nadal', 'ATP', 'ESP', 134946100, 0),
+(4, 'Carlos Alcaraz', 'ATP', 'ESP', 38263552, 1),
+(5, 'Jannik Sinner', 'ATP', 'ITA', 39389088, 1),
+(6, 'Iga Swiatek', 'WTA', 'POL', 34842891, 1),
+(7, 'Aryna Sabalenka', 'WTA', 'BLR', 32199298, 1),
+(8, 'Coco Gauff', 'WTA', 'USA', 22488989, 1),
+(9, 'Madison Keys', 'WTA', 'USA', 22518583, 1),
+(10, 'Naomi Osaka', 'WTA', 'JPN', 22047163, 1);
 
-INSERT INTO zip (zip, city, state_two_letter_code) VALUES
-(10001, 'New York', 'NY'),
-(20002, 'Washington', 'DC'),
-(30003, 'Los Angeles', 'CA'),
-(84604, 'Provo', 'UT');
-
-INSERT INTO dog (dog_id, name, breed, birth_date) VALUES
-(1, 'Buddy', 'Golden Retriever', '2018-06-01'),
-(2, 'Max', 'Labrador Retriever', '2019-07-15'),
-(3, 'Bella', 'Poodle', '2017-08-30'),
-(4, 'Rufus', 'Collie', '2017-08-30'),
-(5, 'Rex', 'Corgi', '2017-08-30');
-
-INSERT INTO award (award_id, dog_id, event_date, award_name) VALUES
-(1, 1, '2021-09-20', 'Best in Show'),
-(2, 1, '2020-05-10', 'Top Agility'),
-(3, 3, '2021-11-05', 'Best Obedience');
-
-
-INSERT INTO person_dog (dog_id, person_id) VALUES
+INSERT INTO ClothingSponsorPlayer (playerId, clothingSponsorId) VALUES
 (1, 1),
-(2, 1),
-(3, 2),
-(4, 5),
-(5, 5),
+(1, 2),
+(2, 3),
+(2, 4),
+(2, 5),
+(3, 3),
+(4, 3),
+(5, 3),
+(6, 2),
+(6, 6),
+(7, 3),
+(8, 7),
+(8, 8),
+(9, 3),
+(10, 3);
+
+INSERT INTO RacketBrandPlayer (playerId, racketBrandId) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 3),
 (5, 1),
-(4, 1);
+(6, 4),
+(7, 2),
+(8, 1),
+(9, 2),
+(9, 5),
+(10, 5);
+
+INSERT INTO Tournament (tournamentId, tournamentName, isGrandSlam, courtType) VALUES
+(1, 'Wimbledon', 1, 'GRASS'),
+(2, 'US Open', 1, 'HARD'),
+(3, 'Australian Open', 1, 'HARD'),
+(4, 'French Open', 1, 'CLAY'),
+(5, 'BNP Paribas Open', 0, 'HARD'),
+(6, '2024 Olympics', 0, 'CLAY'),
+(7, 'Shanghai Rolex Masters', 0, 'HARD'),
+(8, 'WTA Finals', 0, 'HARD'),
+(9, 'Miami Open', 0, 'HARD');
+
+INSERT INTO Match (winningPlayerId, losingPlayerId, tournamentId, score, round, tournamentYear) VALUES
+(1, 2, 1, '7-6(5) 1-6 7-6(4) 4-6 13-12(3)', 'F', 2019),
+(2, 1, 2, '7-6(4) 7-6(2) 6-4', 'F', 2009),
+(1, 2, 1, '7-6(1) 6-7(10) 6-4 6-3', 'F', 2015),
+(3, 1, 4, '6-2 4-6 6-2 7-6(4)', 'QF', 2022),
+(3, 1, 4, '6-0 6-2 7-5', 'F', 2020),
+(1, 3, 3, '6-3 6-2 6-3', 'F', 2019),
+(1, 3, 3, '7-6(5) 6-2', 'SF', 2016),
+(1, 4, 3, '4-6 6-4 6-3 6-4', 'QF', 2025),
+(1, 4, 6, '7-6(3) 7-6(2)', 'F', 2024),
+(4, 1, 1, '6-2 6-2 7-6(4)', 'F', 2024),
+(5, 1, 7, '7-6(4) 6-3', 'F', 2024),
+(5, 1, 3, '6-1 6-2 6-7(6) 6-3', 'SF', 2024),
+(1, 5, 1, '6-3 6-4 7-6(4)', 'SF', 2023),
+(2, 3, 1, '7-6(3) 1-6 6-3 6-4', 'SF', 2019),
+(3, 2, 4, '6-3 6-4 6-2', 'SF', 2019),
+(3, 2, 4, '7-5 7-6(3) 5-7 6-1', 'F', 2011),
+(2, 3, 3, '6-4 3-6 6-1 3-6 6-3', 'F', 2017),
+(3, 4, 5, '6-2 1-6 6-3', 'SF', 2022),
+(4, 5, 4, '2-6 6-3 3-6 6-4 6-3', 'SF', 2024),
+(4, 5, 2, '6-3 6-7(7) 6-7(0) 7-5 6-3', 'QF', 2022),
+(5, 4, 1, '6-1 6-4 6-7(8) 6-3', 'R4', 2022),
+(6, 7, 2, '3-6 6-1 6-4', 'SF', 2022),
+(7, 6, 8, '6-2 2-6 6-1', 'SF', 2022),
+(6, 7, 8, '6-3 6-2', 'SF', 2023),
+(6, 8, 4, '6-2 6-4', 'SF', 2024),
+(6, 8, 4, '6-4 6-2', 'QF', 2023),
+(9, 6, 3, '5-7 6-1 7-6(8)', 'SF', 2025),
+(6, 9, 5, '6-1 6-0', 'QF', 2022),
+(6, 10, 4, '7-6(1) 1-6 7-5', 'R2', 2024),
+(6, 10, 9, '6-4 6-0', 'F', 2022),
+(10, 7, 2, '6-3 2-6 6-4', 'R4', 2018),
+(8, 7, 8, '7-6(4) 6-3', 'SF', 2024),
+(7, 8, 3, '7-6(2) 6-4', 'SF', 2024),
+(8, 7, 2, '2-6 6-3 6-2', 'F', 2023),
+(9, 7, 3, '6-3 2-6 7-5', 'F', 2025),
+(7, 9, 1, '6-2 6-4', 'QF', 2023),
+(7, 9, 2, '0-6 7-6(1) 7-6(5)', 'SF', 2023),
+(8, 9, 2, '6-2 6-3', 'R3', 2022),
+(8, 10, 3, '6-3 6-4', 'R3', 2020),
+(10, 8, 2, '6-3 6-0', 'R3', 2019),
+(10, 9, 2, '6-2 6-4', 'SF', 2018),
+(9, 10, 4, '6-1 7-6(7)', 'R3', 2018),
+(9, 10, 4, '7-5 4-6 7-6(3)', 'R3', 2016);
