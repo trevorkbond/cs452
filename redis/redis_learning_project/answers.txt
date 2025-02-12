@@ -1,0 +1,12 @@
+What is the name of the key in redis that holds the images submitted from run_web_server.py in Redis?
+The name of the key is "image_queue".
+
+How are the prediction results returned by run_model_server.py  into Redis and retrieved by run_web_server.py?
+The model server grabs all the images on the image_queue. After it has run the classifier model while looping through each image, it sticks the image ID as the key and model results as the value in redis. The image ID is a uuid that the web server generated before it stuck it on the queue originally. So the web server keeps attemtping in a while true loop to grab the image ID key from redis and return the results to the client. Once the model server has put the image ID key in there, the web server gets it and returns it back to the client.
+
+Report the results from running simple_request.py with this image. Make sure it's the whole list and not a single item:
+1. church: 0.4142
+2. castle: 0.3981
+3. monastery: 0.1682
+4. palace: 0.0040
+5. vault: 0.0032
